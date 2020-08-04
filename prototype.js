@@ -37,6 +37,7 @@ person.name = 'haha';
 console.log(person.name); // haha
 
 delete person.name;
+console.log(person.__proto__.name)
 console.log(person.name); // Cindy  读取person.name，从person对象中没有找到name属性，就从person的原型中找，person的原型为person.__proto__,也就是Person。prototype, Person.prototype.name = 'Cindy'
 // person.name => person.__proto__.name => Person.prototype.name => Person.prototype.__proto__.name => Object.prototype.name
 
