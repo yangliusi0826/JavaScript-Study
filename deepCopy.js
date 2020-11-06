@@ -96,6 +96,34 @@ function forEach(array, iteratee) {
   return array;
 }
 
+function deepCopy4(originData, weakMap = new WeakMap()) {
+  // 判断是否为基本数据类型
+  if (typeof originData === 'object') {
+    // 判断是否是数组
+    let isArray = Array.isArray(originData);
+    let copyData = isArray ? [] : {};
+
+    //  1. 检查容器中有无克隆过的对象。
+    // 2. 有 - 直接返回；无 - 将当前对象作为key,克隆对象作 为 value进行存储，然后继续克隆。
+    if (weakMap.get(originData)) {
+      return weakMap.get(originData);
+    }
+    weakMap.set(originData, copyData);
+
+    let props = isArray ? originData : Object.keys(originData);
+    forEach(props, (prop, index) => {
+      if (isArray) {
+        prop = index;
+      }
+      copyData[prop] = deepCopy4(originData[prop], weakMap);
+    });
+
+    return copyData;
+  } else {
+    return originData;
+  }
+}
+
 // 1. 属性是基本类型
 // let obj = {
 //   name: 'tianxin',
@@ -142,4 +170,8 @@ console.timeEnd();
 
 console.time();
 console.log(deepCopy3(obj))
+console.timeEnd();
+
+console.time();
+console.log(deepCopy4([1,3,'1', {name: 'tianxin'}]))
 console.timeEnd();
