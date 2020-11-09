@@ -1,5 +1,5 @@
 Function.prototype.call2 = function(context) {
-  var context = context || window;
+  context = Object(context) || window;
   context.fn = this;
 
   var arg = [];
@@ -8,6 +8,22 @@ Function.prototype.call2 = function(context) {
   }
   
   var result = eval('context.fn(' + arg +')');
+  delete context.fn;
+
+  return result;
+}
+
+// 使用es6的展开运算符
+Function.prototype.call3 = function(context) {
+  context = Object(context) || window;
+  context.fn = this;
+
+  var arg = [];
+  for(let i = 1; i < arguments.length; i++) {
+    arg.push(arguments[i]);
+  }
+
+  var result = context.fn(...arg);
   delete context.fn;
 
   return result;
@@ -29,3 +45,5 @@ function bar(name, age) {
 }
 
 console.log(bar.call2(foo, 'kevin', 18));
+
+console.log(bar.call3(foo, 'kevin', 18));
